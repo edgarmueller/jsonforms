@@ -23,6 +23,7 @@
   THE SOFTWARE.
 */
 import * as React from 'react';
+import { connect } from 'react-redux';
 import * as _ from 'lodash';
 import {
   computeLabel,
@@ -32,15 +33,18 @@ import {
   isControl,
   isDescriptionHidden,
   isPlainLabel,
+  JsonSchema,
   mapStateToControlProps,
   NOT_APPLICABLE,
   RankedTester,
-  rankWith
+  rankWith,
+  UISchemaElement
 } from '@jsonforms/core';
-import { connectToJsonForms, Control, DispatchField } from '@jsonforms/react';
+import { Control, DispatchField } from '@jsonforms/react';
 
 import { InputLabel } from '@material-ui/core';
 import { FormControl, FormHelperText } from '@material-ui/core';
+import { shoutingLabelProvider, withLabelProvider } from '../util/withLabelProvider';
 
 export class MaterialInputControl extends Control<ControlProps, ControlState> {
   render() {
@@ -60,6 +64,7 @@ export class MaterialInputControl extends Control<ControlProps, ControlState> {
     const isValid = errors.length === 0;
     const trim = config.trim;
     const style: {[x: string]: any} = {};
+
     if (!visible) {
       style.display = 'none';
     }
@@ -97,5 +102,35 @@ export class MaterialInputControl extends Control<ControlProps, ControlState> {
     }
   }
 }
+
+// TODO: move definitions
+const Reader = computation => ({
+  get: (...ctx) => computation(...ctx),
+  map: f => Reader(ctx => f(computation(ctx))),
+  orElse: f => Reader((...ctx) => {
+    const res = computation(...ctx);
+    const alternative = f(...ctx);
+    return res === undefined ? alternative : res;
+  })
+});
+
+// Running this reader will just return `x`.
+Reader.prototype.of = x => Reader(() => x);
+
+const higherPrioLabelProvider =
+  Reader(
+    (schema: JsonSchema, data: any, uischema?: UISchemaElement) => {
+      const labelDesc = shoutingLabelProvider(schema, data, uischema);
+      if (labelDesc !== undefined && labelDesc.text) {
+        labelDesc.text = _.toUpper(labelDesc.text);
+      }
+      // TODO:
+      return labelDesc;
+      // return undefined;
+    }
+  );
+
 export const materialInputControlTester: RankedTester = rankWith(1, isControl);
-export default connectToJsonForms(mapStateToControlProps)(MaterialInputControl);
+export default withLabelProvider((higherPrioLabelProvider.orElse(shoutingLabelProvider)).get)(
+    connect(mapStateToControlProps, null)(MaterialInputControl)
+) as any;

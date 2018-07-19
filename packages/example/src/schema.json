@@ -1,25 +1,16 @@
 {
   "type": "object",
   "properties": {
-    "firstarray": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "objectarrayofstrings": {
-            "type": "object",
-            "properties": {
-              "choices": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "name": { "type": "string" }
-        }
-      }
+    "foo": {
+      "type": "string",
+      "enum": ["baz", "bar", "vw"]
+    },
+    "bar": {
+      "type": "string"
+    },
+    "baz": {
+      "type": "string",
+      "format": "date"
     }
   }
 }

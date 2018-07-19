@@ -3,8 +3,15 @@
   "elements": [
     {
       "type": "Control",
-      "label": "1",
-      "scope": "#/properties/firstarray"
+      "scope": "#/properties/foo"
+    },
+    {
+      "type": "Control",
+      "scope": "#/properties/bar"
+    },
+    {
+      "type": "Control",
+      "scope": "#/properties/baz"
     }
   ]
 }

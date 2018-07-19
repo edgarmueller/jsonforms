@@ -311,8 +311,7 @@ export const mapStateToControlProps = (state, ownProps): StatePropsOfControl => 
   const path = composeWithUi(ownProps.uischema, ownProps.path);
   const visible = _.has(ownProps, 'visible') ? ownProps.visible :  isVisible(ownProps, state);
   const enabled = _.has(ownProps, 'enabled') ? ownProps.enabled :  isEnabled(ownProps, state);
-  const labelDesc = createLabelDescriptionFrom(ownProps.uischema);
-  const label = labelDesc.show ? labelDesc.text : '';
+
   const errors = _.union(getErrorAt(path)(state).map(error => error.message));
   const controlElement = ownProps.uischema as ControlElement;
   const id = controlElement.scope || '';
@@ -326,8 +325,14 @@ export const mapStateToControlProps = (state, ownProps): StatePropsOfControl => 
     controlElement.options
   );
 
+  const data = Resolve.data(getData(state), path);
+  const labelDesc = _.has(ownProps, 'labelProvider') ?
+    ownProps.labelProvider(resolvedSchema,  data, controlElement) :
+    createLabelDescriptionFrom(ownProps.uischema);
+  const label = labelDesc.show ? labelDesc.text : '';
+
   return {
-    data: Resolve.data(getData(state), path),
+    data,
     description,
     errors,
     label,

@@ -30,14 +30,31 @@ import {
   isEnumControl,
   RankedTester,
   rankWith,
+  WithLabelProvider
 } from '@jsonforms/core';
 import { connectToJsonForms } from '@jsonforms/react';
 
 import Select from '@material-ui/core/Select';
 import { MenuItem } from '@material-ui/core';
+import {
+  shoutingLabelProvider,
+  withLabelProvider
+} from '../util/withLabelProvider';
 
-export const MaterialEnumField = (props: EnumFieldProps) => {
-  const { data, className, id, enabled, uischema, path, handleChange, options } = props;
+export const MaterialEnumField = (props: EnumFieldProps & WithLabelProvider) => {
+  const {
+    schema,
+    data,
+    className,
+    id,
+    enabled,
+    uischema,
+    path,
+    handleChange,
+    options,
+    // TODO: it'd probably be better if we introduced an additional property instead
+    labelProvider
+  } = props;
 
   return (
     <Select
@@ -55,7 +72,7 @@ export const MaterialEnumField = (props: EnumFieldProps) => {
             options.map(optionValue =>
               (
                 <MenuItem value={optionValue} key={optionValue}>
-                  {optionValue}
+                  {labelProvider(schema, optionValue)}
                 </MenuItem>
               )
             )
@@ -71,4 +88,4 @@ export const materialEnumFieldTester: RankedTester = rankWith(2, isEnumControl);
 export default connectToJsonForms(
   defaultMapStateToEnumFieldProps,
   defaultMapDispatchToControlProps)
-(MaterialEnumField);
+(withLabelProvider(shoutingLabelProvider)(MaterialEnumField));

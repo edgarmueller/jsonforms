@@ -23,7 +23,7 @@
   THE SOFTWARE.
 */
 import * as _ from 'lodash';
-import { ControlElement } from '../models/uischema';
+import { ControlElement, LabelDescription, UISchemaElement } from '../models/uischema';
 import { findUISchema, getConfig, getData, getErrorAt } from '../reducers';
 import { RankedTester } from '../testers';
 import {
@@ -38,6 +38,7 @@ import {
   mapDispatchToControlProps,
   StatePropsOfScopedRenderer
 } from './renderer';
+import { JsonSchema } from '..';
 
 /**
  * State props of a field.
@@ -47,11 +48,19 @@ export interface StatePropsOfField extends StatePropsOfScopedRenderer {
   isValid: boolean;
 }
 
+export type LabelProvider =
+  (schema: JsonSchema, data: any, uischema?: UISchemaElement) => LabelDescription;
+
+export interface WithLabelProvider {
+  labelProvider: LabelProvider;
+}
+
 /**
  * State props of a field for enum field
  */
 export interface StatePropsOfEnumField extends StatePropsOfField {
   options: any;
+  labelProvider: LabelProvider;
 }
 
 /**
@@ -130,6 +139,7 @@ export const defaultMapStateToEnumFieldProps = (state, ownProps): StatePropsOfEn
 
   return {
     ...props,
+    labelProvider: ownProps.labelProvider,
     options: ownProps.options !== undefined ? ownProps.options : props.scopedSchema.enum,
   };
 };

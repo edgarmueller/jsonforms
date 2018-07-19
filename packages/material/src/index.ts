@@ -70,6 +70,7 @@ import {
   materialTimeFieldTester
 } from './fields';
 import { ComponentType } from 'react';
+import { shoutingLabelProvider, withLabelProvider } from './util/withLabelProvider';
 
 export * from './complex';
 export * from './controls';
@@ -93,7 +94,8 @@ export const materialRenderers = [
   { tester: materialArrayLayoutTester, renderer: MaterialArrayLayout },
   // additional
   { tester: materialLabelRendererTester, renderer: MaterialLabelRenderer }
-];
+  // apply to all renderers
+].map(r => ({...r, renderer: withLabelProvider(shoutingLabelProvider)(r.renderer)}) as any);
 
 export const materialFields: { tester: RankedTester, field: ComponentType<FieldProps> }[] = [
   { tester: materialBooleanFieldTester, field: MaterialBooleanField },
