@@ -1,5 +1,9 @@
 
 export { booleanControlTester, BooleanControlRenderer } from './controls/boolean/boolean-control';
+export {
+  booleanToggleControlTester,
+    BooleanToggleControlRenderer
+} from './controls/boolean/boolean-toggle-control';
 export { stringControlTester, StringControlRenderer } from './controls/string/string-control';
 export { numberControlTester, NumberControlRenderer } from './controls/number/number-control';
 export { dateControlTester, DateControlRenderer } from './controls/date/date-control';
@@ -14,7 +18,9 @@ export {
   categorizationTester,
   CategorizationMenuLayoutRenderer
 } from './layouts/categorization/categorization-menu-layout';
-export { CategorizationTabLayoutRenderer } from './layouts/categorization/categorization-tab-layout';
+export {
+  CategorizationTabLayoutRenderer
+} from './layouts/categorization/categorization-tab-layout';
 export { CategoryRenderer } from './layouts/categorization/category/category';
 export { groupTester, GroupLayoutRenderer } from './layouts/group/group-layout';
 

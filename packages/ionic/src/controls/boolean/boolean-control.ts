@@ -9,7 +9,8 @@ import { JsonFormsControl } from '@jsonforms/angular';
       <ion-item>
           <ion-label>{{label}}</ion-label>
           <ion-label stacked *ngIf="error" color="error">{{error}}</ion-label>
-          <ion-checkbox [checked]="isChecked()"
+          <ion-checkbox
+            [checked]="isChecked()"
             (ionChange)="onChange($event)"
             [disabled]="!enabled"
             [id]="id"

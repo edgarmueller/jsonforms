@@ -3,6 +3,7 @@ import { IonicModule } from 'ionic-angular';
 import { JsonFormsModule } from '@jsonforms/angular';
 
 import { BooleanControlRenderer } from './controls/boolean/boolean-control';
+import { BooleanToggleControlRenderer } from './controls/boolean/boolean-toggle-control';
 import { StringControlRenderer } from './controls/string/string-control';
 import { NumberControlRenderer } from './controls/number/number-control';
 import { DateControlRenderer } from './controls/date/date-control';
@@ -29,6 +30,7 @@ import {
   declarations: [
     // controls
     BooleanControlRenderer,
+    BooleanToggleControlRenderer,
     StringControlRenderer,
     NumberControlRenderer,
     DateControlRenderer,
@@ -76,6 +78,7 @@ import {
   entryComponents: [
     // controls
     BooleanControlRenderer,
+    BooleanToggleControlRenderer,
     StringControlRenderer,
     NumberControlRenderer,
     DateControlRenderer,
