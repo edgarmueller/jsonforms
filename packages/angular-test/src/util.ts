@@ -1,8 +1,9 @@
 import { Type } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockNgRedux } from '@angular-redux/store/testing';
 import { JsonFormsControl } from '@jsonforms/angular';
 import { JsonSchema, UISchemaElement } from '@jsonforms/core';
+import { Subject } from 'rxjs';
 
 export interface ErrorTestExpectation {
     errorInstance: Type<any>;
@@ -25,6 +26,24 @@ export const baseSetup = <C extends JsonFormsControl>(testConfig: TestConfig<C>)
 
         MockNgRedux.reset();
     });
+};
+
+export const setupMockStore = (fixture: ComponentFixture<any>, testData: any): Subject<any> => {
+    const mockSubStore = MockNgRedux.getSelectorStub();
+    const component = fixture.componentInstance;
+    component.uischema = testData.uischema;
+    component.schema = testData.schema;
+
+    mockSubStore.next({
+        jsonforms: {
+            core: {
+                data: testData.data,
+                schema: testData.schema,
+            }
+        }
+    });
+    fixture.detectChanges();
+    return mockSubStore;
 };
 
 export interface TestData {

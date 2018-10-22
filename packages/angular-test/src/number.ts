@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { JsonFormsControl } from '@jsonforms/angular';
 import { ControlElement, JsonSchema } from '@jsonforms/core';
 import { Subject } from 'rxjs';
-import { baseSetup, ErrorTestExpectation, TestConfig, TestData } from './util';
+import { baseSetup, ErrorTestExpectation, setupMockStore, TestConfig, TestData } from './util';
 
 interface ComponentResult<C extends JsonFormsControl> {
     fixture: ComponentFixture<any>;
@@ -48,24 +48,6 @@ export const defaultTestData: TestData = {
     data: defaultData,
     schema: defaultSchema,
     uischema: defaultUischema
-};
-
-export const setupMockStore = (fixture: ComponentFixture<any>, testData: any): Subject<any> => {
-    const mockSubStore = MockNgRedux.getSelectorStub();
-    const component = fixture.componentInstance;
-    component.uischema = testData.uischema;
-    component.schema = testData.schema;
-
-    mockSubStore.next({
-        jsonforms: {
-            core: {
-                data: testData.data,
-                schema: testData.schema,
-            }
-        }
-    });
-    fixture.detectChanges();
-    return mockSubStore;
 };
 
 export const renderFloat = <C extends JsonFormsControl>(
