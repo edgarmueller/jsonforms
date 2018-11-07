@@ -49,7 +49,7 @@ import { JsonFormsState } from '../store';
 import { AnyAction, Dispatch } from 'redux';
 import { JsonFormsRendererRegistryEntry } from '../reducers/renderers';
 
-export { JsonFormsRendererRegistryEntry }
+export { JsonFormsRendererRegistryEntry };
 
 export interface Labels {
     default: string;
@@ -430,7 +430,7 @@ export const mapDispatchToArrayControlProps =
                 update(
                     path,
                     array => {
-                        toDelete.forEach(s => array.splice(array.indexOf(s), 1));
+                        _.reverse(toDelete).forEach(s => array.splice(array.indexOf(s), 1));
                         return array;
                     }
                 )
