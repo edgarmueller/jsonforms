@@ -58,7 +58,7 @@ const mapStateToProps = (
 ) => {
   const visible = has(ownProps, 'visible')
     ? ownProps.visible
-    : isVisible(ownProps, state);
+    : isVisible(ownProps.uischema, state);
 
   return {
     visible

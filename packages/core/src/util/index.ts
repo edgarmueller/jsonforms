@@ -29,7 +29,7 @@ import {
   JsonFormsState,
   JsonSchema,
   Scopable,
-  StatePropsOfRenderer
+  UISchemaElement
 } from '../';
 import { resolveData, resolveSchema } from './resolvers';
 import {
@@ -127,11 +127,11 @@ export { composePaths, composeWithUi, Paths, toDataPath };
 
 // Runtime --
 const Runtime = {
-  isEnabled(props: StatePropsOfRenderer, state: JsonFormsState): boolean {
-    return isEnabled(props, state);
+  isEnabled(uischema: UISchemaElement, state: JsonFormsState): boolean {
+    return isEnabled(uischema, state);
   },
-  isVisible(props: StatePropsOfRenderer, state: JsonFormsState): boolean {
-    return isVisible(props, state);
+  isVisible(uischema: UISchemaElement, state: JsonFormsState): boolean {
+    return isVisible(uischema, state);
   }
 };
 export { isEnabled, isVisible, Runtime, deriveType };

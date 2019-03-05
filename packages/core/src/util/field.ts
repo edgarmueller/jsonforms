@@ -108,10 +108,10 @@ export const mapStateToFieldProps = (
   const { id, schema, path, uischema } = ownProps;
   const visible = has(ownProps, 'visible')
     ? ownProps.visible
-    : isVisible(ownProps, state);
+    : isVisible(uischema, state);
   const enabled = has(ownProps, 'enabled')
     ? ownProps.enabled
-    : isEnabled(ownProps, state);
+    : isEnabled(uischema, state);
   const errors = getErrorAt(path)(state).map(error => error.message);
   const isValid = isEmpty(errors);
   const defaultConfig = cloneDeep(getConfig(state));

@@ -22,17 +22,15 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
 */
-import has from 'lodash/has';
 import React from 'react';
 import {
-    isVisible,
-    JsonFormsState,
-    LabelElement,
-    OwnPropsOfRenderer,
-    RankedTester,
-    rankWith,
-    RendererProps,
-    uiTypeIs,
+  LabelElement,
+  mapStateToLayoutProps,
+  RankedTester,
+  rankWith,
+  rendererDefaultProps,
+  RendererProps,
+  uiTypeIs
 } from '@jsonforms/core';
 import { StatelessRenderer } from '@jsonforms/react';
 
@@ -48,7 +46,7 @@ export const materialLabelRendererTester: RankedTester = rankWith(1, uiTypeIs('L
 /**
  * Default renderer for a label.
  */
-export const MaterialLabelRenderer: StatelessRenderer<RendererProps> =
+export const MaterialLabelRenderer: StatelessRenderer<RendererProps> & { defaultProps: Partial<RendererProps> } =
   ({ uischema, visible }) => {
     const labelElement: LabelElement = uischema as LabelElement;
     const style: {[x: string]: any} = {};
@@ -62,12 +60,6 @@ export const MaterialLabelRenderer: StatelessRenderer<RendererProps> =
     );
   };
 
-const mapStateToProps = (state: JsonFormsState, ownProps: OwnPropsOfRenderer) => {
-  const visible = has(ownProps, 'visible') ? ownProps.visible :  isVisible(ownProps, state);
+MaterialLabelRenderer.defaultProps = rendererDefaultProps;
 
-  return {
-    visible,
-  };
-};
-
-export default connect(mapStateToProps, null)(MaterialLabelRenderer);
+export default connect(mapStateToLayoutProps)(MaterialLabelRenderer);
