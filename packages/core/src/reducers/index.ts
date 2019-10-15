@@ -44,6 +44,7 @@ import {
   JsonFormsCore,
   subErrorsAt
 } from './core';
+import { resolvedRefsReducer } from './refs';
 import { JsonFormsState, JsonFormsSubStates } from '../store';
 import {
   findMatchingUISchema,
@@ -65,6 +66,7 @@ export {
   rendererReducer,
   cellReducer,
   coreReducer,
+  resolvedRefsReducer,
   UISchemaTester,
   findMatchingUISchema
 };
@@ -81,6 +83,7 @@ export const jsonformsReducer = (
     uischemas: uischemaRegistryReducer,
     defaultData: defaultDataReducer,
     i18n: i18nReducer,
+    refs: resolvedRefsReducer,
     ...additionalReducers
   });
 

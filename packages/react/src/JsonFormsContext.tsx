@@ -380,7 +380,7 @@ const withContextToDispatchCellProps = (
     const cellProps = ctxToDispatchCellProps(ctx, props);
     const dispatchProps = ctxDispatchToControlProps(ctx.dispatch);
 
-    return <Component {...props} {...dispatchProps} {...cellProps} />;
+    return <Component {...props} {...dispatchProps} {...cellProps} dispatch={ctx.dispatch} refs={ctx.refs} />;
   };
 
 const withContextToEnumCellProps = (

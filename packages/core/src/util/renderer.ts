@@ -672,6 +672,9 @@ export interface StatePropsOfJsonFormsRenderer
 
 export interface JsonFormsProps extends StatePropsOfJsonFormsRenderer {
   renderers?: JsonFormsRendererRegistryEntry[];
+  dispatch?: any;
+  refs?: any;
+  isResolving?: boolean;
 }
 
 export const mapStateToJsonFormsRendererProps = (
@@ -792,38 +795,17 @@ export const mapStateToArrayLayoutProps = (
 
 export type CombinatorProps = StatePropsOfCombinator & DispatchPropsOfControl;
 
-let mem: any = {};
-
-export const resetRefCache = () => {
-  mem = {};
-};
-
-export const refResolver = (
+export const refResolver = async (
   rootSchema: JsonSchema,
   refParserOptions: RefParser.Options,
-  depth = 0
-): any => async (pointer: string) => {
-  if (mem[pointer] === undefined) {
-    const parser = new RefParser();
-    const clonedRootSchema = cloneDeep(rootSchema as any);
-    const refs = await parser.resolve(clonedRootSchema, {
-      ...refParserOptions,
-      dereference: { circular: 'ignore' }
-    });
-    const resolved: any = refs.get(pointer);
-    if (depth > 20) {
-      return resolved;
-    }
-    if (resolved.$ref) {
-      return refResolver(rootSchema, refParserOptions, depth + 1)(
-        resolved.$ref
-      );
-    }
-    mem[pointer] = resolved;
-    return resolved;
-  } else {
-    return mem[pointer];
-  }
+): Promise<any> => {
+  const parser = new RefParser();
+  const clonedRootSchema = cloneDeep(rootSchema as any);
+  const refs = await parser.resolve(clonedRootSchema, {
+    ...refParserOptions,
+    dereference: { circular: 'ignore' }
+  });
+  return refs;
 };
 
 /**

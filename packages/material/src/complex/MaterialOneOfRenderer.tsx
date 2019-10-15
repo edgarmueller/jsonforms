@@ -35,7 +35,7 @@ import {
   OwnPropsOfControl,
   RankedTester,
   rankWith,
-  refResolver
+  //  refResolver
 } from '@jsonforms/core';
 import {
   Button,
@@ -72,7 +72,7 @@ const MaterialOneOfRenderer = ({
   uischemas,
   data,
   ajv,
-  refParserOptions
+  //  refParserOptions
 }: CombinatorProps) => {
   const [open, setOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -85,16 +85,17 @@ const MaterialOneOfRenderer = ({
     handleChange(path, createDefaultValue(schema.oneOf[newIndex]));
     setSelectedIndex(newIndex);
   };
-  const resolveRef = useCallback(pointer => {
-    return refResolver(rootSchema, refParserOptions)(pointer);
-  }, [rootSchema, refParserOptions]);
+  //const resolveRef = useCallback(pointer => {
+  //  return refResolver(rootSchema, refParserOptions)(pointer);
+  //}, [rootSchema, refParserOptions]);
   useEffect(() => {
     const findIndex = async () => {
       const index = await findApplicableSchema(
         ajv,
         data,
         schema.oneOf,
-        resolveRef
+        undefined
+        //resolveRef
       );
       setSelectedIndex(index);
     };

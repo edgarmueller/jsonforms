@@ -56,6 +56,10 @@ export const SET_LOCALIZED_UISCHEMAS: 'jsonforms/SET_LOCALIZED_UISCHEMAS' =
 export const ADD_DEFAULT_DATA: 'jsonforms/ADD_DEFAULT_DATA' = `jsonforms/ADD_DEFAULT_DATA`;
 export const REMOVE_DEFAULT_DATA: 'jsonforms/REMOVE_DEFAULT_DATA' = `jsonforms/REMOVE_DEFAULT_DATA`;
 
+export const SET_IS_RESOLVING: 'jsonforms/SET_IS_RESOLVING' = `jsonforms/SET_IS_RESOLVING`;
+export const ADD_RESOLVED_REFS: 'jsonforms/ADD_RESOLVED_REFS' = `jsonforms/ADD_RESOLVED_REFS`;
+export const REMOVE_RESOLVED_REF: 'jsonforms/REMOVE_RESOLVED_REF' = `jsonforms/REMOVE_RESOLVED_REF`;
+
 export interface UpdateAction {
   type: 'jsonforms/UPDATE';
   path: string;
@@ -283,3 +287,39 @@ export const setUISchema = (uischema: UISchemaElement): SetUISchemaAction => ({
   type: SET_UISCHEMA,
   uischema
 });
+
+export interface AddResolvedRefsAction {
+  type: 'jsonforms/ADD_RESOLVED_REFS';
+  refs: { [ref: string]: { resolved: JsonSchema } };
+}
+
+export interface SetIsResolvingsAction {
+  type: 'jsonforms/SET_IS_RESOLVING';
+  isResolving: boolean;
+}
+
+export interface RemoveResolvedRefAction {
+  type: 'jsonforms/REMOVE_RESOLVED_REF';
+  ref: string;
+}
+
+export const addResolvedRefs = (refs: { [ref: string]: { resolved: JsonSchema } }) => {
+  return {
+    type: ADD_RESOLVED_REFS,
+    refs
+  };
+};
+
+export const removeResolvedRef = (ref: string) => {
+  return {
+    type: REMOVE_RESOLVED_REF,
+    ref
+  };
+};
+
+export const setIsResolving = (isResolving: boolean) => {
+  return {
+    type: SET_IS_RESOLVING,
+    isResolving
+  };
+};

@@ -39,6 +39,7 @@ import {
   refResolver,
   removeId,
   UISchemaElement,
+  addResolvedRefs,
 } from '@jsonforms/core';
 import {
   JsonFormsStateProvider,
@@ -90,18 +91,35 @@ export class JsonFormsDispatchRenderer extends React.Component<
     };
   }
 
-  resolveRef = async (pointer: string) => {
-    return refResolver(this.props.rootSchema, this.props.refParserOptions)(pointer);
-  };
+  resolveRef = (pointer: string) => {
+    const { refs } = this.props;
+    const resolve = async (ptr: string) => {
+      if (refs !== undefined && refs.refs) {
+        return refs.refs.get(ptr);
+      }
+      return undefined;
+    };
+    return resolve(pointer);
+  }
 
   componentDidMount() {
     if (this.props.renderers.length > 0) {
-      this.findRenderer().then(testedRenderers => {
-        const designatedRenderer = maxBy(testedRenderers, 'test');
-        this.setState({
-          renderer: designatedRenderer
-        });
-      });
+      const resolve = async () => {
+        if (this.props.refs !== undefined && Object.keys(this.props.refs.refs).length === 0) {
+          const resolvedRefs = await refResolver(this.props.rootSchema, this.props.refParserOptions);
+          this.props.dispatch(addResolvedRefs(resolvedRefs));
+          return resolvedRefs;
+        }
+        return this.props.refs !== undefined && this.props.refs.refs;
+      };
+      return resolve().then(() =>
+        this.findRenderer().then(testedRenderers => {
+          const designatedRenderer = maxBy(testedRenderers, 'test');
+          this.setState({
+            renderer: designatedRenderer
+          });
+        })
+      );
     } else {
       this.setState({
         renderer: null
@@ -197,6 +215,7 @@ export const JsonFormsDispatch = React.memo(
   (props: OwnPropsOfJsonFormsRenderer & JsonFormsReactProps) => {
     const ctx = useJsonForms();
     const { data, errors } = ctx.core;
+    const dispatch = ctx.dispatch;
     useLayoutEffect(() => {
       props.onChange && props.onChange({ data, errors });
     }, [data, errors]);
@@ -209,6 +228,8 @@ export const JsonFormsDispatch = React.memo(
         rootSchema={ctx.core.schema}
         renderers={ctx.renderers}
         refParserOptions={ctx.core.refParserOptions}
+        refs={ctx.refs}
+        dispatch={dispatch}
       />
     );
   }

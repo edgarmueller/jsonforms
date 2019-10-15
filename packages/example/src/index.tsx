@@ -24,9 +24,10 @@
 */
 import ReactDOM from 'react-dom';
 import React from 'react';
+import logger from 'redux-logger';
 import './index.css';
 import App from './App';
-import { combineReducers, createStore } from 'redux';
+import { combineReducers, createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import geoschema from './geographical-location.schema';
 import {
@@ -78,7 +79,7 @@ const setupStore = (
     examples: {
       data: exampleData
     }
-  });
+  }, applyMiddleware(logger));
 
   // Resolve example configuration
   // Add schema to validation

@@ -25,7 +25,7 @@
 import maxBy from 'lodash/maxBy';
 import React, { useEffect, useState, useCallback } from 'react';
 import { UnknownRenderer } from './UnknownRenderer';
-import { DispatchCellProps, refResolver } from '@jsonforms/core';
+import { DispatchCellProps, refResolver, addResolvedRefs } from '@jsonforms/core';
 import { withJsonFormsDispatchCellProps } from './JsonFormsContext';
 
 /**
@@ -38,13 +38,23 @@ const Dispatch = ({
   path,
   cells,
   id,
-  refParserOptions
+  refParserOptions,
+  refs,
+  dispatch
 }: DispatchCellProps) => {
   const [isTesting, setIsTesting] = useState(false);
   const [cell, setCell] = useState(undefined);
-  const resolveRef = useCallback((pointer: string) => {
-    return refResolver(rootSchema, refParserOptions)(pointer);
-  }, [rootSchema, refParserOptions]);
+  const resolveRef = useCallback(pointer => {
+    const resolve = async (ptr: string) => {
+      if (refs !== undefined && refs.refs[ptr]) {
+        return refs.refs[ptr];
+      }
+      const resolvedRefs = await refResolver(schema, refParserOptions);
+      dispatch(addResolvedRefs(resolvedRefs));
+      return resolvedRefs.get(ptr);
+    };
+    return resolve(pointer);
+  }, [schema, refParserOptions, refs]);
   useEffect(() => {
     const test = async () => {
       setIsTesting(true);

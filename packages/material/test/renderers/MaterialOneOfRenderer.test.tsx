@@ -28,7 +28,7 @@ import Dialog from '@material-ui/core/Dialog';
 
 import Enzyme, { mount, ReactWrapper } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import { ControlElement, JsonSchema, resetRefCache } from '@jsonforms/core';
+import { ControlElement, JsonSchema } from '@jsonforms/core';
 import { MaterialOneOfRenderer, materialRenderers } from '../../src';
 import { JsonFormsContext, JsonFormsDispatch, JsonFormsStateContext, JsonFormsStateProvider, RefResolver } from '@jsonforms/react';
 import { waitForResolveRef } from '../util';
@@ -67,7 +67,6 @@ describe('Material oneOf renderer', () => {
   let wrapper: ReactWrapper;
 
   afterEach(() => {
-    resetRefCache();
     wrapper.unmount();
   });
 

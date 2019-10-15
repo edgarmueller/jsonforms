@@ -1,5 +1,5 @@
 import React, { ComponentType, useCallback, useEffect, useState } from 'react';
-import { JsonSchema, refResolver } from '@jsonforms/core';
+import { addResolvedRefs, JsonSchema, refResolver } from '@jsonforms/core';
 import { JsonFormsStateContext, withJsonFormsContext } from './JsonFormsContext';
 import isEqual from 'lodash/isEqual';
 
@@ -44,11 +44,33 @@ const withContextToRefResolverProps = (
   props
 }: JsonFormsStateContext & RefResolverProps) => {
     const { refParserOptions } = ctx.core;
-    //const schema = ctx.core.schema || props.schema;
+    const { dispatch, refs } = ctx;
     const schema = props.schema;
+    const [resolved, setResolved] = useState(false);
     const resolveRef = useCallback(pointer => {
-      return refResolver(schema, refParserOptions)(pointer);
-    }, [schema, refParserOptions]);
+      const resolve = async (ptr: string) => {
+        if (refs !== undefined && refs.refs) {
+          return refs.refs.get(ptr);
+        }
+        return undefined;
+      };
+      return resolve(pointer);
+    }, [schema, refParserOptions, refs]);
+    useEffect(() => {
+      if (refs !== undefined && Object.keys(refs).length === 0) {
+        const resolve = async () => {
+          const resolvedRefs = await refResolver(schema, refParserOptions);
+          dispatch(addResolvedRefs(resolvedRefs));
+          return resolvedRefs;
+        };
+        resolve().then(() => setResolved(true));
+      } else {
+        setResolved(true)
+      }
+    }, [refs]);
+    if (!resolved) {
+      return null;
+    }
     return (
       <Component
         resolveRef={resolveRef}
